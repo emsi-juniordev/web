@@ -1,0 +1,452 @@
+/* ==========================================================
+   Aurora Login – style.css
+   Layout works on phones, tablets, laptops and big monitors.
+   ========================================================== */
+ 
+:root {
+  --teal: #12908f;
+  --teal-glow: rgba(18, 144, 143, 0.55);
+  --btn: #12404a;
+  --btn-hover: #1a5866;
+  --field: #ebebeb;
+  --icon: #6e6e6e;
+  --placeholder: #9a9a9a;
+  --text-soft: #9b9fa3;
+  --link: #2f86ff;
+  --danger: #ff6b6b;
+  --ok: #3ddc97;
+  --card-bg: rgba(2, 10, 12, 0.62);
+ 
+  /* Change this to use your own photo as the background, e.g.
+     --bg-image: url("aurora.jpg");                              */
+  --bg-image: none;
+ 
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-script: "Dancing Script", "Brush Script MT", cursive;
+}
+ 
+*,
+*::before,
+*::after { box-sizing: border-box; }
+ 
+html, body { height: 100%; }
+ 
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: #fff;
+  background: #01060c;
+  overflow-x: hidden;
+}
+ 
+/* ---------- Background (fixed, always covers the whole screen) ---------- */
+ 
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    var(--bg-image) center / cover no-repeat,
+    linear-gradient(180deg, #01060c 0%, #02121d 40%, #03283a 75%, #043a43 100%);
+}
+ 
+.aurora-layer {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(calc(var(--px, 0) * 24px), calc(var(--py, 0) * 14px), 0);
+  transition: transform 0.6s ease-out;
+}
+ 
+.aurora {
+  position: absolute;
+  left: 50%;
+  mix-blend-mode: screen;
+  filter: blur(46px);
+  will-change: transform, opacity;
+}
+ 
+/* wide glow near the horizon */
+.a1 {
+  bottom: -18%;
+  width: max(130vw, 900px);
+  height: 62vh;
+  margin-left: calc(max(130vw, 900px) / -2);
+  background: radial-gradient(ellipse at 50% 100%,
+    rgba(70, 255, 170, 0.85) 0%,
+    rgba(20, 190, 170, 0.5) 38%,
+    rgba(0, 120, 150, 0.15) 62%,
+    transparent 75%);
+  animation: glow 9s ease-in-out infinite alternate;
+}
+ 
+/* tall ribbon */
+.a2 {
+  bottom: 8%;
+  width: max(46vw, 380px);
+  height: 88vh;
+  margin-left: calc(max(46vw, 380px) / -2);
+  background: linear-gradient(to top,
+    rgba(40, 235, 165, 0.55),
+    rgba(14, 150, 160, 0.32) 45%,
+    transparent 90%);
+  border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+  opacity: 0.8;
+  animation: ribbon 14s ease-in-out infinite alternate;
+}
+ 
+/* cool blue-violet accent */
+.a3 {
+  bottom: 12%;
+  width: max(60vw, 480px);
+  height: 70vh;
+  margin-left: calc(max(60vw, 480px) / -2 + 12vw);
+  background: radial-gradient(ellipse at 50% 100%,
+    rgba(60, 130, 255, 0.4),
+    rgba(90, 80, 220, 0.18) 50%,
+    transparent 72%);
+  animation: ribbon 18s ease-in-out infinite alternate-reverse;
+}
+ 
+@keyframes glow {
+  from { transform: translateX(-3%) scaleY(0.92); opacity: 0.7; }
+  to   { transform: translateX(3%)  scaleY(1.08); opacity: 1; }
+}
+ 
+@keyframes ribbon {
+  0%   { transform: translateX(-8%) skewX(-8deg) scaleY(0.9); filter: blur(46px) hue-rotate(0deg); }
+  50%  { transform: translateX(4%)  skewX(5deg)  scaleY(1.05); }
+  100% { transform: translateX(10%) skewX(10deg) scaleY(1);   filter: blur(54px) hue-rotate(25deg); }
+}
+ 
+#skyCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+ 
+/* ---------- Page layout ---------- */
+ 
+.stage {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 48px);
+}
+ 
+/* ---------- Glass card ---------- */
+ 
+.card {
+  width: min(100%, 480px);
+  min-height: 520px;
+  display: grid;
+  align-items: center;
+  padding: clamp(28px, 6vw, 56px) clamp(22px, 6vw, 64px);
+  border-radius: clamp(32px, 7vw, 56px);
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(0, 0, 0, 0.25);
+  animation: cardIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+ 
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+ 
+@media (min-width: 1100px) {
+  .card { width: 520px; min-height: 580px; }
+}
+ 
+/* ---------- Views (login / signup / home) ---------- */
+ 
+.view { display: none; text-align: center; }
+.view.active { display: block; animation: viewIn 0.5s ease both; }
+ 
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+ 
+.title {
+  margin: 0 0 clamp(24px, 5vw, 40px);
+  font-family: var(--font-script);
+  font-weight: 700;
+  font-size: clamp(3.2rem, 11vw, 4.6rem);
+  line-height: 1.05;
+  color: var(--teal);
+  animation: titleGlow 4.5s ease-in-out infinite alternate;
+}
+ 
+@keyframes titleGlow {
+  from { text-shadow: 0 0 6px rgba(18, 144, 143, 0.15); }
+  to   { text-shadow: 0 0 22px var(--teal-glow), 0 0 4px rgba(18, 144, 143, 0.4); }
+}
+ 
+/* ---------- Fields ---------- */
+ 
+.group { margin-bottom: 14px; text-align: left; }
+ 
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 58px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--field);
+  border: 2px solid transparent;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+ 
+.field:focus-within {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(18, 144, 143, 0.25), 0 6px 16px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+ 
+.icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin-right: 14px;
+  fill: var(--icon);
+}
+ 
+.field input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 500 1rem/1 var(--font-body);
+  letter-spacing: 0.03em;
+  color: #222;
+}
+ 
+.field input::placeholder { color: var(--placeholder); }
+ 
+/* stop the browser's yellow autofill from clashing with the pill */
+.field input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 40px var(--field) inset;
+  -webkit-text-fill-color: #222;
+}
+ 
+.eye {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-right: -6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+ 
+.eye:hover { background: rgba(0, 0, 0, 0.07); }
+.eye:active { transform: scale(0.9); }
+.eye:focus-visible { outline: 2px solid var(--teal); }
+.eye svg { width: 26px; height: 26px; fill: var(--icon); }
+.eye .eye-closed { display: none; }
+.eye[aria-pressed="true"] .eye-open { display: none; }
+.eye[aria-pressed="true"] .eye-closed { display: block; }
+ 
+/* error state */
+.error {
+  min-height: 0;
+  margin: 0;
+  padding: 0 20px;
+  font-size: 0.82rem;
+  color: var(--danger);
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.25s, opacity 0.25s, padding 0.25s;
+}
+ 
+.group.invalid .error { max-height: 40px; opacity: 1; padding-top: 6px; }
+.group.invalid .field { border-color: var(--danger); animation: shake 0.4s; }
+.group.valid .field { border-color: rgba(61, 220, 151, 0.7); }
+ 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(3px); }
+}
+ 
+/* password strength bar */
+.strength {
+  height: 4px;
+  margin: 8px 18px 0;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+ 
+.strength span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--danger);
+  transition: width 0.3s, background 0.3s;
+}
+ 
+.form-msg {
+  min-height: 1.2em;
+  margin: 2px 0 10px;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--danger);
+}
+ 
+/* ---------- Button ---------- */
+ 
+.btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 170px;
+  height: 56px;
+  margin-top: 8px;
+  padding: 0 38px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--btn);
+  color: #fff;
+  font: 700 1.1rem/1 var(--font-body);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  overflow: hidden;
+}
+ 
+.btn:hover {
+  background: var(--btn-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45), 0 0 18px rgba(18, 144, 143, 0.35);
+}
+ 
+.btn:active { transform: translateY(0) scale(0.97); }
+.btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+ 
+/* light sweep on hover */
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-20deg);
+}
+.btn:hover::after { animation: sweep 0.8s; }
+ 
+@keyframes sweep { to { left: 130%; } }
+ 
+.btn .spinner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: spin 0.7s linear infinite;
+}
+ 
+.btn.loading .btn-text { opacity: 0; }
+.btn.loading .spinner { opacity: 1; }
+.btn.loading { pointer-events: none; }
+ 
+@keyframes spin { to { transform: rotate(360deg); } }
+ 
+/* ---------- Switch link ---------- */
+ 
+.switch {
+  margin: 34px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--text-soft);
+}
+ 
+.switch a {
+  color: var(--link);
+  font-size: 1.15rem;
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+ 
+.switch a:hover { color: #6aa6ff; text-shadow: 0 0 12px rgba(47, 134, 255, 0.6); }
+.switch a:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 4px; }
+ 
+/* ---------- Logged-in view ---------- */
+ 
+.home-name { margin: 0 0 6px; font-size: 1.4rem; font-weight: 700; }
+.home-clock { margin: 0 0 18px; font-size: 2.4rem; font-weight: 500; letter-spacing: 0.06em; color: #bfeee6; font-variant-numeric: tabular-nums; }
+.home-note { margin: 0 0 22px; color: var(--text-soft); line-height: 1.5; }
+ 
+/* ---------- Toast ---------- */
+ 
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 10;
+  max-width: calc(100vw - 32px);
+  padding: 13px 22px;
+  border-radius: 999px;
+  background: rgba(8, 28, 32, 0.92);
+  border: 1px solid rgba(61, 220, 151, 0.4);
+  color: #fff;
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: translate(-50%, 20px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+ 
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.error-toast { border-color: rgba(255, 107, 107, 0.5); }
+ 
+/* ---------- Small screens / short screens ---------- */
+ 
+@media (max-width: 420px) {
+  .field { height: 54px; padding: 0 14px; }
+  .icon { margin-right: 10px; }
+  .switch { margin-top: 26px; font-size: 1rem; }
+}
+ 
+@media (max-height: 640px) and (orientation: landscape) {
+  .stage { place-items: start center; }
+  .card { min-height: 0; }
+  .title { margin-bottom: 18px; font-size: 2.8rem; }
+}
+ 
+/* ---------- Respect "reduce motion" ---------- */
+ 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
